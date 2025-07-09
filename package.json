@@ -1,12 +1,14 @@
-@@ .. @@
-   "version": "1.0.0",
--  "description": "",
-+  "description": "Load Testing Dashboard Backend",
-   "main": "index.js",
-   "scripts": {
--    "test": "echo \"Error: no test specified\" && exit 1"
+{
+  "name": "load-testing-dashboard-backend",
+  "version": "1.0.0",
+  "description": "Load Testing Dashboard Backend",
+  "main": "index.js",
+  "scripts": {
     "dev": "nodemon server/index.js",
     "build-frontend": "cd load-testing-dashboard && npm run build",
     "serve-frontend": "cd load-testing-dashboard && npm start"
-+    "dev": "nodemon server/index.js"
-   },
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
