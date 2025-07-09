@@ -1,0 +1,12 @@
+@@ .. @@
+   "version": "1.0.0",
+-  "description": "",
++  "description": "Load Testing Dashboard Backend",
+   "main": "index.js",
+   "scripts": {
+-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "nodemon server/index.js",
+    "build-frontend": "cd load-testing-dashboard && npm run build",
+    "serve-frontend": "cd load-testing-dashboard && npm start"
++    "dev": "nodemon server/index.js"
+   },

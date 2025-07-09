@@ -6,7 +6,8 @@ from prometheus_client import start_http_server, Counter, Gauge  # Import de Pro
 # Démarre le serveur HTTP Prometheus pour exposer les métriques sur le port 9646
 start_http_server(9646)
 
-BASE_URL = "http://localhost:8000/api"
+# BASE_URL sera défini dynamiquement par l'interface
+BASE_URL = "http://localhost:8000/api"  # URL par défaut
 AGENT_ID = 1
 MANAGER_ID = 2
 
