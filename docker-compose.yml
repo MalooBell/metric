@@ -1,0 +1,122 @@
+version: "3.8"
+
+services:
+  # Locust (Injecteur de charge)
+  locust:
+    build:
+      context: ./locust
+      dockerfile: Dockerfile   
+    command: locust -f /mnt/locust/locustfile.py
+    ports:
+      - "8089:8089"  # UI Locust
+      - "9646:9646"  # /metrics (Prometheus)
+    volumes:
+      - ./locust:/mnt/locust
+    networks:
+      - loadtest-network
+    depends_on:
+      - prometheus  # Assure que Prometheus démarre avant Locust
+
+  # Node Exporter (Export des métriques système)
+  node_exporter:
+    image: prom/node-exporter:latest  # Utilise l'image officielle de Node Exporter
+    ports: 
+      - "9100:9100"  # Export des métriques système
+    networks:
+      - loadtest-network
+
+  # Prometheus
+  prometheus:
+    image: prom/prometheus:latest  # Utilise l'image officielle de Prometheus
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml  # Configuration de Prometheus
+    ports: 
+      - "9090:9090"  # Interface Prometheus
+    networks:
+      - loadtest-network
+
+  # Grafana
+  grafana:
+    image: grafana/grafana:latest  # Utilise l'image officielle de Grafana
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin  # Mot de passe pour accéder à Grafana
+    volumes:
+      - ./grafana/datasources:/etc/grafana/provisioning/datasources  # Configuration des sources de données
+      - ./grafana/dashboards:/etc/grafana/provisioning/dashboards  # Dashboards provisionnés automatiquement
+      - ./grafana/json:/var/lib/grafana/dashboards  # Dashboards au format JSON
+    ports: 
+      - "3000:3000"  # Interface Grafana
+    networks:
+      - loadtest-network
+
+networks:
+  loadtest-network:
+    driver: bridge
+
+
+
+
+# version: "3.8"
+
+# services:
+#   # 1) Injecteur de charge
+#   locust:
+#     build: ./locust  # Dockerfile ci-dessous
+#     command: >
+#       locust --host=http://localhost:8000
+#     ports:
+#       - "8089:8089"  # UI Locust
+#       - "9646:9646"  # /metrics (Prometheus)
+#     volumes:
+#       - ./locust:/mnt/locust
+#     networks:
+#       - loadtest-network
+#     depends_on:
+#       - prometheus  # Assure que Prometheus démarre avant Locust
+
+#   # 2) Export système (Node Exporter)
+#   node_exporter:
+#     image: prom/node-exporter:latest
+#     ports: 
+#       - "9100:9100"  # Export des métriques système
+#     networks:
+#       - loadtest-network
+
+#   # 3) Export GPU (facultatif)
+#   # gpu_exporter:
+#   #   image: nvidia/dcgm-exporter:latest
+#   #   runtime: nvidia
+#   #   environment: 
+#   #     - NVIDIA_VISIBLE_DEVICES=all
+#   #   ports: 
+#   #     - "9400:9400"  # Export des métriques GPU
+#   #   networks:
+#   #     - loadtest-network
+
+#   # 4) Prometheus
+#   prometheus:
+#     image: prom/prometheus:latest
+#     volumes:
+#       - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml  # Configuration de Prometheus
+#     ports: 
+#       - "9090:9090"  # Interface Prometheus
+#     networks:
+#       - loadtest-network
+
+#   # 5) Grafana (dashboards auto-provisionnés)
+#   grafana:
+#     image: grafana/grafana:latest
+#     environment:
+#       - GF_SECURITY_ADMIN_PASSWORD=admin  # Mot de passe pour accéder à Grafana
+#     volumes:
+#       - ./grafana/datasources:/etc/grafana/provisioning/datasources  # Configuration des sources de données
+#       - ./grafana/dashboards:/etc/grafana/provisioning/dashboards  # Dashboards provisionnés automatiquement
+#       - ./grafana/json:/var/lib/grafana/dashboards  # Dashboards au format JSON
+#     ports: 
+#       - "3000:3000"  # Interface Grafana
+#     networks:
+#       - loadtest-network
+
+# networks:
+#   loadtest-network:
+#     driver: bridge

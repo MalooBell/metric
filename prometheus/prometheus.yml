@@ -1,0 +1,17 @@
+global:
+  scrape_interval: 10s  # Temps entre chaque scrape
+
+scrape_configs:
+  - job_name: 'locust'
+    static_configs:
+      - targets: ['locust:9646']  # Localisation de Prometheus sur Locust
+
+  - job_name: 'node_exporter'
+    static_configs:
+      - targets: ['node_exporter:9100']  # Localisation de Prometheus sur Node Exporter
+
+  # Si tu utilises GPU exporter, décommente cette section
+  # - job_name: 'gpu_exporter'
+  #   static_configs:
+  #     - targets: ['gpu_exporter:9400']  # Localisation de Prometheus sur GPU Exporter
+
